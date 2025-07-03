@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Parts Inventory Management System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --toyota-red: #e10e1f;
+            --toyota-dark-red: #a00b18;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--toyota-red) 0%, var(--toyota-dark-red) 100%);
+            color: white;
+            padding: 5rem 0;
+        }
+        
+        .toyota-badge {
+            background-color: var(--toyota-red);
+            color: white;
+            font-weight: bold;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--toyota-red);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--toyota-red);
+        }
+        
+        .btn-toyota {
+            background-color: var(--toyota-red);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .btn-toyota:hover {
+            background-color: var(--toyota-dark-red);
+            color: white;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--toyota-red);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-gear-fill me-2" style="color: var(--toyota-red);"></i>
+                <strong>Toyota Parts Pro</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#benefits">Benefits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        <a class="btn btn-toyota" href="#demo">Request Demo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <span class="toyota-badge">NEW RELEASE</span>
+                    <h1 class="display-4 fw-bold mb-4">Toyota Parts Inventory Management System</h1>
+                    <p class="lead mb-4">Streamline your Toyota parts operations with our specialized inventory solution designed for dealerships, repair shops, and warehouses.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#demo" class="btn btn-light btn-lg px-4">Request Demo</a>
+                        <a href="#features" class="btn btn-outline-light btn-lg px-4">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <img src="https://via.placeholder.com/600x400?text=Toyota+Parts+Dashboard" alt="Dashboard Preview" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Powerful Features for Toyota Parts Management</h2>
+                <p class="lead text-muted">Everything you need to efficiently manage your Toyota parts inventory</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card p-4">
+                        <div class="text-center">
+                            <i class="bi bi-box-seam feature-icon"></i>
+                            <h4>Smart Inventory</h4>
+                            <p class="text-muted">Track Toyota part numbers with precision and set low-stock alerts for critical components.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card p-4">
+                        <div class="text-center">
+                            <i class="bi bi-upc-scan feature-icon"></i>
+                            <h4>VIN Decoder</h4>
+                            <p class="text-muted">Instantly identify compatible parts for any Toyota vehicle by VIN.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card p-4">
+                        <div class="text-center">
+                            <i class="bi bi-gear feature-icon"></i>
+                            <h4>Engine Compatibility</h4>
+                            <p class="text-muted">Verify fitment for 2JZ, 1GR-FE and other Toyota engines.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="card feature-card p-4">
+                        <div class="text-center">
+                            <i class="bi bi-graph-up feature-icon"></i>
+                            <h4>Real-Time Analytics</h4>
+                            <p class="text-muted">Track sales trends and get reorder recommendations based on demand.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="https://via.placeholder.com/500x350?text=Toyota+Parts+Management" alt="System Benefits" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-4">Why Choose Our System?</h2>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-4">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-flex">
+                                <i class="bi bi-check-circle-fill text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Built for Toyota Parts</h4>
+                            <p class="text-muted">Specialized workflows for OEM and aftermarket components with Toyota-specific part numbers and classifications.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-4">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-flex">
+                                <i class="bi bi-check-circle-fill text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Multi-Warehouse Support</h4>
+                            <p class="text-muted">Sync inventory across multiple locations with one-click stock transfers between warehouses.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex">
+                        <div class="me-4">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-flex">
+                                <i class="bi bi-check-circle-fill text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Mobile-Friendly</h4>
+                            <p class="text-muted">Manage your inventory on the go with our responsive interface that works on any device.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">What Our Customers Say</h2>
+                <p class="lead text-muted">Trusted by Toyota dealerships and repair shops nationwide</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card testimonial-card h-100 p-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                            </div>
+                            <p class="card-text mb-4">"This system cut our part lookup time by 70%—essential for our busy Toyota service center."</p>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <img src="https://via.placeholder.com/50?text=AM" alt="Alex M." class="rounded-circle" width="50">
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Alex M.</h6>
+                                    <small class="text-muted">Service Manager</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="card testimonial-card h-100 p-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                            </div>
+                            <p class="card-text mb-4">"The VIN decoder and engine compatibility tools are game-changers for our parts department."</p>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <img src="https://via.placeholder.com/50?text=JL" alt="Jamie L." class="rounded-circle" width="50">
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Jamie L.</h6>
+                                    <small class="text-muted">Parts Distributor</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4 mx-auto">
+                    <div class="card testimonial-card h-100 p-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <i class="bi bi-star-fill text-warning"></i>
+                            </div>
+                            <p class="card-text mb-4">"We reduced our inventory carrying costs by 25% after implementing this system's analytics."</p>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <img src="https://via.placeholder.com/50?text=SR" alt="Sarah R." class="rounded-circle" width="50">
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Sarah R.</h6>
+                                    <small class="text-muted">Dealership Owner</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="demo" class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-4">Ready to Transform Your Parts Management?</h2>
+                    <p class="lead mb-5">Join hundreds of Toyota specialists who are saving time and money with our inventory system.</p>
+                    
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card bg-white text-dark h-100">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title">Request Demo</h4>
+                                    <p class="card-text">See the system in action with a personalized walkthrough</p>
+                                    <form>
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control" placeholder="Your Email">
+                                        </div>
+                                        <button type="submit" class="btn btn-toyota w-100">Schedule Demo</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card bg-white text-dark h-100">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title">Get Started</h4>
+                                    <p class="card-text">Begin your free 14-day trial with no credit card required</p>
+                                    <a href="#" class="btn btn-toyota w-100">Start Free Trial</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="py-5 bg-black text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-gear-fill me-2" style="color: var(--toyota-red);"></i>
+                        Toyota Parts Pro
+                    </h5>
+                    <p>The specialized inventory management solution for Toyota dealerships, repair shops, and parts distributors.</p>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Product</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Features</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Pricing</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Integrations</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Updates</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Documentation</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Help Center</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Webinars</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Contact</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Partners</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2">
+                    <h6 class="fw-bold">Connect</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-facebook" style="font-size: 1.25rem;"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter" style="font-size: 1.25rem;"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-linkedin" style="font-size: 1.25rem;"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-youtube" style="font-size: 1.25rem;"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4 bg-secondary">
+            
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <small class="text-muted">© 2024 Toyota Parts Inventory Pro. All rights reserved.</small>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small class="text-muted">
+                        <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                        <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Smooth scroll for anchor links -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

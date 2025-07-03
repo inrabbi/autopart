@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Parts - Order Management</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+        }
+        .toyota-red {
+            color: #e10e1f;
+        }
+        .order-status-badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+        .order-item-thumb {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .customer-badge {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            color: white;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h4><i class="bi bi-gear-fill toyota-red"></i> CeeNonso Parts</h4>
+                    <hr class="bg-light">
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">
+                            <i class="bi bi-box-seam me-2"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="orders.html">
+                            <i class="bi bi-cart me-2"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="warehouses.html">
+                            <i class="bi bi-building me-2"></i> Warehouses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="customers.html">
+                            <i class="bi bi-people me-2"></i> Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="bi bi-graph-up me-2"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-tools me-2 toyota-red"></i> Toyota Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-cart me-2"></i> Order Management</h2>
+                    <div>
+                        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#createOrderModal">
+                            <i class="bi bi-plus-circle"></i> Create Order
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order Filters -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Search</label>
+                                    <input type="text" class="form-control" placeholder="Order #, Customer...">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select">
+                                        <option selected>All Statuses</option>
+                                        <option>Pending</option>
+                                        <option>Processing</option>
+                                        <option>Shipped</option>
+                                        <option>Delivered</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Toyota Model</label>
+                                    <select class="form-select">
+                                        <option selected>All Models</option>
+                                        <option>Camry</option>
+                                        <option>Corolla</option>
+                                        <option>RAV4</option>
+                                        <option>Supra</option>
+                                        <option>Land Cruiser</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Date Range</label>
+                                    <select class="form-select">
+                                        <option selected>All Time</option>
+                                        <option>Today</option>
+                                        <option>This Week</option>
+                                        <option>This Month</option>
+                                        <option>Custom Range</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Warehouse</label>
+                                    <select class="form-select">
+                                        <option selected>All Warehouses</option>
+                                        <option>Los Angeles</option>
+                                        <option>Texas</option>
+                                        <option>Florida</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-funnel"></i> Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Recent Orders</h5>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-printer"></i> Print
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="ordersTable" class="table table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Customer</th>
+                                        <th>Items</th>
+                                        <th>Model</th>
+                                        <th>Date</th>
+                                        <th>Warehouse</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Sample Toyota Parts Orders -->
+                                    <tr>
+                                        <td>#1042</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="customer-badge">JD</span>
+                                                <div>
+                                                    <div>John Doe</div>
+                                                    <small class="text-muted">AutoFix Repair</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <img src="https://via.placeholder.com/60?text=2JZ" class="order-item-thumb me-2" alt="2JZ Engine">
+                                                <div>
+                                                    <div>2JZ-GTE Engine</div>
+                                                    <small class="text-muted">Qty: 1</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Supra</td>
+                                        <td>2023-06-15</td>
+                                        <td>Los Angeles</td>
+                                        <td>$3,850.00</td>
+                                        <td>
+                                            <span class="badge bg-warning order-status-badge">Processing</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#orderDetailModal">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-truck"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1041</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="customer-badge">AS</span>
+                                                <div>
+                                                    <div>Auto Services LLC</div>
+                                                    <small class="text-muted">Wholesale</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div class="d-flex mb-2">
+                                                    <img src="https://via.placeholder.com/60?text=04152" class="order-item-thumb me-2" alt="Oil Filter">
+                                                    <div>
+                                                        <div>04152-0F010 Oil Filter</div>
+                                                        <small class="text-muted">Qty: 12</small>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <img src="https://via.placeholder.com/60?text=90919" class="order-item-thumb me-2" alt="Spark Plug">
+                                                    <div>
+                                                        <div>90919-01200 Spark Plug</div>
+                                                        <small class="text-muted">Qty: 24</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Camry</td>
+                                        <td>2023-06-14</td>
+                                        <td>Texas</td>
+                                        <td>$420.36</td>
+                                        <td>
+                                            <span class="badge bg-success order-status-badge">Shipped</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#orderDetailModal">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-truck"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1040</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="customer-badge">MS</span>
+                                                <div>
+                                                    <div>Mike's Speed Shop</div>
+                                                    <small class="text-muted">Performance</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <img src="https://via.placeholder.com/60?text=1GR" class="order-item-thumb me-2" alt="1GR Engine">
+                                                <div>
+                                                    <div>1GR-FE Engine</div>
+                                                    <small class="text-muted">Qty: 2</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>4Runner</td>
+                                        <td>2023-06-12</td>
+                                        <td>Florida</td>
+                                        <td>$5,500.00</td>
+                                        <td>
+                                            <span class="badge bg-primary order-status-badge">Delivered</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#orderDetailModal">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-truck"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1039</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="customer-badge">TC</span>
+                                                <div>
+                                                    <div>Tony's Customs</div>
+                                                    <small class="text-muted">Restoration</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <img src="https://via.placeholder.com/60?text=3S" class="order-item-thumb me-2" alt="3S Engine">
+                                                <div>
+                                                    <div>3S-GTE Engine</div>
+                                                    <small class="text-muted">Qty: 1</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Celica</td>
+                                        <td>2023-06-10</td>
+                                        <td>Los Angeles</td>
+                                        <td>$2,250.00</td>
+                                        <td>
+                                            <span class="badge bg-info order-status-badge">Backordered</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#orderDetailModal">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-truck"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1038</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="customer-badge">RP</span>
+                                                <div>
+                                                    <div>Ralph's Performance</div>
+                                                    <small class="text-muted">Tuning Shop</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div class="d-flex mb-2">
+                                                    <img src="https://via.placeholder.com/60?text=2JZ" class="order-item-thumb me-2" alt="2JZ Engine">
+                                                    <div>
+                                                        <div>2JZ-GTE Turbo Kit</div>
+                                                        <small class="text-muted">Qty: 1</small>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <img src="https://via.placeholder.com/60?text=04465" class="order-item-thumb me-2" alt="Fuel Pump">
+                                                    <div>
+                                                        <div>04465-0W010 Fuel Pump</div>
+                                                        <small class="text-muted">Qty: 1</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Supra</td>
+                                        <td>2023-06-08</td>
+                                        <td>Texas</td>
+                                        <td>$1,845.99</td>
+                                        <td>
+                                            <span class="badge bg-danger order-status-badge">Cancelled</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#orderDetailModal">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-truck"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Order Modal -->
+    <div class="modal fade" id="createOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Create New Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Customer*</label>
+                                <select class="form-select" required>
+                                    <option value="">Select customer</option>
+                                    <option>John Doe (AutoFix Repair)</option>
+                                    <option>Auto Services LLC (Wholesale)</option>
+                                    <option>Mike's Speed Shop</option>
+                                    <option>Tony's Customs</option>
+                                    <option>Ralph's Performance</option>
+                                    <option value="new">+ Add New Customer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Order Type*</label>
+                                <select class="form-select" required>
+                                    <option>Retail</option>
+                                    <option>Wholesale</option>
+                                    <option>Repair Shop</option>
+                                    <option>Online Store</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Toyota Parts</label>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <h6 class="mb-0">Order Items</h6>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addPartsModal">
+                                                <i class="bi bi-plus"></i> Add Parts
+                                            </button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Part #</th>
+                                                        <th>Description</th>
+                                                        <th>Model</th>
+                                                        <th>Price</th>
+                                                        <th>Qty</th>
+                                                        <th>Total</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>2JZ-GTE</td>
+                                                        <td>Engine Assembly</td>
+                                                        <td>Supra</td>
+                                                        <td>$3,850.00</td>
+                                                        <td>
+                                                            <input type="number" class="form-control form-control-sm" value="1" min="1" style="width: 60px;">
+                                                        </td>
+                                                        <td>$3,850.00</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="5" class="text-end"><strong>Subtotal:</strong></td>
+                                                        <td>$3,850.00</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" class="text-end"><strong>Shipping:</strong></td>
+                                                        <td>$125.00</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" class="text-end"><strong>Total:</strong></td>
+                                                        <td>$3,975.00</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Shipping Method*</label>
+                                <select class="form-select" required>
+                                    <option>Standard Ground</option>
+                                    <option>Expedited</option>
+                                    <option>Freight (Engines/Large Parts)</option>
+                                    <option>Local Pickup</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fulfillment Warehouse*</label>
+                                <select class="form-select" required>
+                                    <option>Auto-select closest</option>
+                                    <option>Los Angeles (Main)</option>
+                                    <option>Texas Warehouse</option>
+                                    <option>Florida Warehouse</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" rows="2" placeholder="Special instructions..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Create Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Parts Modal -->
+    <div class="modal fade" id="addPartsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Add Toyota Parts to Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="Search by part # or description">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option selected>All Models</option>
+                                    <option>Camry</option>
+                                    <option>Corolla</option>
+                                    <option>Supra</option>
+                                    <option>4Runner</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option selected>All Types</option>
+                                    <option>Engine</option>
+                                    <option>Transmission</option>
+                                    <option>Electrical</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Part #</th>
+                                    <th>Description</th>
+                                    <th>Compatibility</th>
+                                    <th>Stock</th>
+                                    <th>Price</th>
+                                    <th>Add</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <img src="https://via.placeholder.com/60?text=2JZ" class="order-item-thumb" alt="2JZ Engine">
+                                    </td>
+                                    <td>2JZ-GTE</td>
+                                    <td>Engine Assembly</td>
+                                    <td>Supra, IS300</td>
+                                    <td>
+                                        <span class="badge bg-success">In Stock (3)</span>
+                                    </td>
+                                    <td>$3,850.00</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">
+                                            <i class="bi bi-plus"></i> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="https://via.placeholder.com/60?text=04152" class="order-item-thumb" alt="Oil Filter">
+                                    </td>
+                                    <td>04152-0F010</td>
+                                    <td>Oil Filter</td>
+                                    <td>Camry, RAV4</td>
+                                    <td>
+                                        <span class="badge bg-warning">Low Stock (5)</span>
+                                    </td>
+                                    <td>$18.99</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">
+                                            <i class="bi bi-plus"></i> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="https://via.placeholder.com/60?text=1GR" class="order-item-thumb" alt="1GR Engine">
+                                    </td>
+                                    <td>1GR-FE</td>
+                                    <td>Engine Long Block</td>
+                                    <td>4Runner, Tacoma</td>
+                                    <td>
+                                        <span class="badge bg-success">In Stock (12)</span>
+                                    </td>
+                                    <td>$2,750.00</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">
+                                            <i class="bi bi-plus"></i> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add Selected Parts</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Order #1042 Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Order Items</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Part #</th>
+                                                    <th>Description</th>
+                                                    <th>Model</th>
+                                                    <th>Price</th>
+                                                    <th>Qty</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>2JZ-GTE</td>
+                                                    <td>
+                                                        <strong>2JZ-GTE Engine Assembly</strong>
+                                                        <div class="text-muted small">Toyota OEM · Used</div>
+                                                    </td>
+                                                    <td>Supra</td>
+                                                    <td>$3,850.00</td>
+                                                    <td>1</td>
+                                                    <td>$3,850.00</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5" class="text-end">Subtotal:</td>
+                                                    <td>$3,850.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5" class="text-end">Freight Shipping:</td>
+                                                    <td>$125.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5" class="text-end"><strong>Total:</strong></td>
+                                                    <td><strong>$3,975.00</strong></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Order Timeline</h6>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-plus"></i> Add Update
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Order Placed</h6>
+                                                <small class="text-muted">2023-06-15 10:45 AM</small>
+                                            </div>
+                                            <p class="mb-1">Customer placed order through website</p>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Payment Received</h6>
+                                                <small class="text-muted">2023-06-15 11:30 AM</small>
+                                            </div>
+                                            <p class="mb-1">Credit card payment processed</p>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Processing Started</h6>
+                                                <small class="text-muted">2023-06-15 2:15 PM</small>
+                                            </div>
+                                            <p class="mb-1">Order assigned to LA warehouse for fulfillment</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Customer Details</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <span class="customer-badge">JD</span>
+                                        <div>
+                                            <h5 class="mb-0">John Doe</h5>
+                                            <small class="text-muted">AutoFix Repair</small>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Contact:</strong>
+                                        <div>john@autofix.com</div>
+                                        <div>(555) 123-4567</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Shipping Address:</strong>
+                                        <div>AutoFix Repair</div>
+                                        <div>123 Main St</div>
+                                        <div>Los Angeles, CA 90001</div>
+                                        <div>United States</div>
+                                    </div>
+                                    <div>
+                                        <strong>Billing Address:</strong>
+                                        <div>Same as shipping</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Order Actions</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success">
+                                            <i class="bi bi-check-circle"></i> Mark as Shipped
+                                        </button>
+                                        <button class="btn btn-outline-primary">
+                                            <i class="bi bi-printer"></i> Print Packing Slip
+                                        </button>
+                                        <button class="btn btn-outline-secondary">
+                                            <i class="bi bi-envelope"></i> Email Customer
+                                        </button>
+                                        <button class="btn btn-outline-danger">
+                                            <i class="bi bi-x-circle"></i> Cancel Order
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            $('#ordersTable').DataTable({
+                responsive: true,
+                order: [[4, 'desc']], // Sort by date descending by default
+                columnDefs: [
+                    { orderable: false, targets: [8] } // Disable sorting on actions column
+                ]
+            });
+            
+            // Status badge colors
+            $('.order-status-badge').each(function() {
+                const status = $(this).text().toLowerCase();
+                if(status === 'processing') {
+                    $(this).removeClass('bg-warning').addClass('bg-warning');
+                } else if(status === 'shipped') {
+                    $(this).removeClass('bg-success').addClass('bg-success');
+                } else if(status === 'delivered') {
+                    $(this).removeClass('bg-primary').addClass('bg-primary');
+                } else if(status === 'cancelled') {
+                    $(this).removeClass('bg-danger').addClass('bg-danger');
+                } else if(status === 'backordered') {
+                    $(this).removeClass('bg-info').addClass('bg-info');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

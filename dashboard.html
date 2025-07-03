@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CeeNonso Parts - Inventory Management</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+        }
+        .stat-card {
+            border-left: 4px solid #0d6efd;
+        }
+        .quick-action-group {
+            border-left: 3px solid #0d6efd;
+            padding-left: 10px;
+            margin-bottom: 1rem;
+        }
+        .action-btn {
+            transition: all 0.2s;
+        }
+        .action-btn:hover {
+            transform: translateX(3px);
+        }
+        .toyota-red {
+            color: #e10e1f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h4><i class="bi bi-gear-fill toyota-red"></i> CeeNonso  Parts</h4>
+                    <hr class="bg-light">
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">
+                            <i class="bi bi-box-seam me-2"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">
+                            <i class="bi bi-cart me-2"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="warehouses.html">
+                            <i class="bi bi-building me-2"></i> Warehouses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="customers.html">
+                            <i class="bi bi-people me-2"></i> Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="bi bi-graph-up me-2"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-tools me-2 toyota-red"></i> Toyota Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-speedometer2 me-2"></i> Dashboard</h2>
+                    <div>
+                        <select class="form-select form-select-sm w-auto">
+                            <option selected>All Warehouses</option>
+                            <option>Ladipo Palamo (Main)</option>
+                            <option>Ladipo 2 Warehouse</option>
+                            <option>Ladipo 3 Warehouse</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Total Parts</h6>
+                                <h3 class="card-title">1,248</h3>
+                                <p class="card-text text-success">
+                                    <i class="bi bi-arrow-up"></i> 5% from last month
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Low Stock</h6>
+                                <h3 class="card-title">27</h3>
+                                <p class="card-text text-danger">
+                                    <i class="bi bi-exclamation-triangle"></i> Needs attention
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Pending Orders</h6>
+                                <h3 class="card-title">14</h3>
+                                <p class="card-text text-warning">
+                                    <i class="bi bi-clock"></i> 3 urgent
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Monthly Sales</h6>
+                                <h3 class="card-title">$42,380</h3>
+                                <p class="card-text text-success">
+                                    <i class="bi bi-arrow-up"></i> 12% from last month
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Row -->
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-8">
+                        <!-- Recent Activity -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
+                                <button class="btn btn-sm btn-outline-primary">View All</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group">
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-muted">Today, 10:45 AM</small>
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="bi bi-box-seam text-primary"></i> 
+                                            <strong>2JZ-GTE Engine</strong> stock updated (3 added to Ladipo Warehouse)
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-muted">Today, 9:30 AM</small>
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="bi bi-cart-check text-success"></i> 
+                                            New order #1042 (Camry parts) - $1,245
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-muted">Yesterday, 4:15 PM</small>
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="bi bi-exclamation-triangle text-warning"></i> 
+                                            <strong>04152-0F010 (Oil Filter)</strong> low stock alert
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-muted">Yesterday, 2:30 PM</small>
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="bi bi-truck text-info"></i> 
+                                            Shipment #231 delivered to Texas Warehouse
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item border-0">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="text-muted">Yesterday, 11:20 AM</small>
+                                        </div>
+                                        <p class="mb-1">
+                                            <i class="bi bi-arrow-left-right text-secondary"></i> 
+                                            Transfer completed: 5x 1GR-FE engines to Florida
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inventory Table -->
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Recent Inventory Updates</h5>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addPartModal">
+                                    <i class="bi bi-plus"></i> Add Part
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Part #</th>
+                                                <th>Description</th>
+                                                <th>Models</th>
+                                                <th>Engine</th>
+                                                <th>Stock</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>04152-0F010</td>
+                                                <td>Oil Filter</td>
+                                                <td>Camry, RAV4</td>
+                                                <td>All</td>
+                                                <td>
+                                                    <span class="badge bg-warning">Low (5)</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2JZ-GTE</td>
+                                                <td>Engine Assembly</td>
+                                                <td>Supra, IS300</td>
+                                                <td>2JZ-GTE</td>
+                                                <td>
+                                                    <span class="badge bg-success">In Stock (3)</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>90919-01200</td>
+                                                <td>Spark Plug</td>
+                                                <td>Corolla, Tacoma</td>
+                                                <td>4-cylinders</td>
+                                                <td>
+                                                    <span class="badge bg-success">In Stock (42)</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>1GR-FE</td>
+                                                <td>Engine Long Block</td>
+                                                <td>Tundra, 4Runner</td>
+                                                <td>1GR-FE</td>
+                                                <td>
+                                                    <span class="badge bg-info">Moderate (12)</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>04465-0W010</td>
+                                                <td>Fuel Pump</td>
+                                                <td>Camry, Avalon</td>
+                                                <td>2.4L, 3.5L</td>
+                                                <td>
+                                                    <span class="badge bg-danger">Out of Stock</span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Quick Actions -->
+                    <div class="col-md-4">
+                        <!-- Enhanced Quick Actions Panel -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
+                            </div>
+                            <div class="card-body p-2">
+                                <!-- Inventory Actions -->
+                                <div class="quick-action-group">
+                                    <h6 class="px-2 text-muted small fw-bold">Inventory</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-sm btn-outline-primary text-start action-btn" data-bs-toggle="modal" data-bs-target="#addPartModal">
+                                            <i class="bi bi-plus-circle"></i> Add Toyota Part
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary text-start action-btn" data-bs-toggle="modal" data-bs-target="#transferModal">
+                                            <i class="bi bi-arrow-left-right"></i> Transfer Stock
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary text-start action-btn">
+                                            <i class="bi bi-box-seam"></i> Bulk Import (CSV)
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary text-start action-btn">
+                                            <i class="bi bi-printer"></i> Print Barcode Labels
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Order Actions -->
+                                <div class="quick-action-group">
+                                    <h6 class="px-2 text-muted small fw-bold">Orders</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-sm btn-outline-success text-start action-btn">
+                                            <i class="bi bi-cart-plus"></i> Create Manual Order
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success text-start action-btn">
+                                            <i class="bi bi-truck"></i> Process Shipments
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success text-start action-btn">
+                                            <i class="bi bi-arrow-counterclockwise"></i> Process Returns
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Toyota Specific Tools -->
+                                <div class="quick-action-group">
+                                    <h6 class="px-2 text-muted small fw-bold">Toyota Tools</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-sm btn-outline-danger text-start action-btn vin-decoder-btn">
+                                            <i class="bi bi-upc-scan"></i> VIN Decoder
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger text-start action-btn engine-compatibility-btn">
+                                            <i class="bi bi-gear"></i> Engine Compatibility
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger text-start action-btn">
+                                            <i class="bi bi-clipboard-data"></i> TSB Lookup
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Low Stock Alert -->
+                                <div class="alert alert-warning mt-3 py-2">
+                                    <div class="d-flex">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                        <div>
+                                            <small><strong>Low Stock Alert</strong><br>
+                                            5 Toyota parts need replenishment</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Warehouse Status -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-building me-2"></i>Warehouse Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Ladipo Palamo (Main)</h6>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-success" style="width: 65%">65% Capacity</div>
+                                    </div>
+                                    <small>1,024 parts | 27 low stock</small>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Ladipo 2 Warehouse</h6>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-warning" style="width: 45%">45% Capacity</div>
+                                    </div>
+                                    <small>724 parts | 8 low stock</small>
+                                </div>
+                                <div>
+                                    <h6>Ladipo 3 Warehouse</h6>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-danger" style="width: 85%">85% Capacity</div>
+                                    </div>
+                                    <small>1,512 parts | 42 low stock</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Orders -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-cart me-2"></i>Recent Orders</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <strong>#1042</strong>
+                                            <small class="text-success">$1,245</small>
+                                        </div>
+                                        <small>Camry parts | Shipped</small>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <strong>#1041</strong>
+                                            <small class="text-success">$3,420</small>
+                                        </div>
+                                        <small>2JZ-GTE Engine | Processing</small>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <strong>#1040</strong>
+                                            <small class="text-success">$780</small>
+                                        </div>
+                                        <small>Tacoma suspension | Delivered</small>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Part Modal -->
+    <div class="modal fade" id="addPartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Add Toyota Part</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Part Number*</label>
+                                <input type="text" class="form-control" placeholder="e.g. 04152-0F010" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Part Type*</label>
+                                <select class="form-select" required>
+                                    <option value="">Select type</option>
+                                    <option>Engine</option>
+                                    <option>Transmission</option>
+                                    <option>Electrical</option>
+                                    <option>Suspension</option>
+                                    <option>Body</option>
+                                    <option>Interior</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">OEM/Aftermarket*</label>
+                                <select class="form-select" required>
+                                    <option>Toyota OEM</option>
+                                    <option>Aftermarket</option>
+                                    <option>Refurbished</option>
+                                    <option>Used</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Condition</label>
+                                <select class="form-select">
+                                    <option>New</option>
+                                    <option>Used - Good</option>
+                                    <option>Used - Fair</option>
+                                    <option>Rebuilt</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Description*</label>
+                                <input type="text" class="form-control" placeholder="e.g. 2JZ-GTE Engine Assembly" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Compatible Models*</label>
+                                <select class="form-select" multiple required>
+                                    <option>4Runner</option>
+                                    <option>Avalon</option>
+                                    <option>Camry</option>
+                                    <option>Corolla</option>
+                                    <option>Highlander</option>
+                                    <option>Hilux</option>
+                                    <option>Land Cruiser</option>
+                                    <option>Prius</option>
+                                    <option>RAV4</option>
+                                    <option>Supra</option>
+                                    <option>Tacoma</option>
+                                    <option>Tundra</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Engine Codes</label>
+                                <input type="text" class="form-control" placeholder="e.g. 2JZ-GTE, 1GR-FE">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Cost Price*</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Selling Price*</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Initial Stock*</label>
+                                <input type="number" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add Part</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Stock Modal -->
+    <div class="modal fade" id="transferModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Transfer Stock Between Warehouses</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Part*</label>
+                            <select class="form-select" required>
+                                <option value="">Select part</option>
+                                <option>04152-0F010 - Oil Filter</option>
+                                <option>2JZ-GTE - Engine Assembly</option>
+                                <option>90919-01200 - Spark Plug</option>
+                                <option>1GR-FE - Engine Long Block</option>
+                            </select>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">From Warehouse*</label>
+                                <select class="form-select" required>
+                                    <option>Ladipo Palamo (Main)</option>
+                                    <option>Ladipo 2 Warehouse</option>
+                                    <option>Ladipo 3 Warehouse</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">To Warehouse*</label>
+                                <select class="form-select" required>
+                                    <option>Ladipo 2  Warehouse</option>
+                                    <option>Ladipo Palamo (Main)</option>
+                                    <option>Ladipo 3 Warehouse</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Quantity*</label>
+                                <input type="number" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Transfer Reason</label>
+                                <select class="form-select">
+                                    <option>Regular stock movement</option>
+                                    <option>Customer order fulfillment</option>
+                                    <option>Emergency transfer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Initiate Transfer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // VIN Decoder Action
+            document.querySelector('.vin-decoder-btn').addEventListener('click', function() {
+                const vin = prompt("Enter Toyota VIN (17 characters):");
+                if(vin && vin.length === 17) {
+                    alert(`Toyota VIN Decoder Results:\n\nVIN: ${vin}\nModel: Camry\nYear: 2020\nEngine: 2.5L 4-cylinder (A25A-FKS)\nPlant: Georgetown, Kentucky`);
+                } else if(vin) {
+                    alert("Invalid VIN. Toyota VINs must be 17 characters.");
+                }
+            });
+            
+            // Engine Compatibility Check
+            document.querySelector('.engine-compatibility-btn').addEventListener('click', function() {
+                const engineCode = prompt("Enter Toyota Engine Code (e.g., 2JZ-GTE):");
+                if(engineCode) {
+                    let compatibility = "";
+                    switch(engineCode.toUpperCase()) {
+                        case "2JZ-GTE":
+                            compatibility = "Supra (1993-2002)\nLexus IS300\nToyota Soarer";
+                            break;
+                        case "1GR-FE":
+                            compatibility = "4Runner (2003+)\nTacoma (2005+)\nFJ Cruiser\nLand Cruiser Prado";
+                            break;
+                        case "3S-GE":
+                            compatibility = "Celica (1986-1993)\nMR2\nCarina";
+                            break;
+                        default:
+                            compatibility = "No compatibility data found for this engine code.";
+                    }
+                    alert(`Engine ${engineCode.toUpperCase()} fits:\n\n${compatibility}`);
+                }
+            });
+
+            // Low stock alert click handler
+            document.querySelector('.alert-warning').addEventListener('click', function() {
+                // In a real app, this would filter the inventory table
+                alert("Redirecting to low stock report...");
+            });
+        });
+    </script>
+</body>
+</html>

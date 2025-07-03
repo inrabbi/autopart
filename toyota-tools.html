@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Parts - Toyota Tools</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+        }
+        .toyota-red {
+            color: #e10e1f;
+        }
+        .tool-card {
+            transition: all 0.3s;
+            border-left: 4px solid #e10e1f;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(225, 14, 31, 0.15);
+        }
+        .vin-input {
+            font-family: monospace;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+        .compatibility-badge {
+            font-size: 0.75rem;
+        }
+        .tab-content {
+            background-color: #f8f9fa;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid #e10e1f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h4><i class="bi bi-gear-fill toyota-red"></i> Toyota Parts</h4>
+                    <hr class="bg-light">
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">
+                            <i class="bi bi-box-seam me-2"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">
+                            <i class="bi bi-cart me-2"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="warehouses.html">
+                            <i class="bi bi-building me-2"></i> Warehouses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="customers.html">
+                            <i class="bi bi-people me-2"></i> Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="bi bi-graph-up me-2"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link active" href="toyota-tools.html">
+                            <i class="bi bi-tools me-2 toyota-red"></i> Toyota Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-tools toyota-red me-2"></i> Toyota Tools</h2>
+                    <div class="badge bg-danger">PRO</div>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i> These specialized tools help identify, verify, and research Toyota parts and vehicles.
+                </div>
+
+                <!-- Toyota Tools Grid -->
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-4">
+                        <div class="card tool-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h4 class="card-title"><i class="bi bi-upc-scan toyota-red me-2"></i> VIN Decoder</h4>
+                                        <h6 class="card-subtitle text-muted">Decode Toyota Vehicle Identification Numbers</h6>
+                                    </div>
+                                    <span class="badge bg-danger">Most Used</span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Enter Toyota VIN (17 characters)</label>
+                                    <input type="text" class="form-control vin-input" maxlength="17" placeholder="e.g. JT2BF22K1W0123456">
+                                </div>
+                                <button class="btn btn-danger w-100">
+                                    <i class="bi bi-search me-2"></i> Decode VIN
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card tool-card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="bi bi-gear toyota-red me-2"></i> Engine Compatibility</h4>
+                                <h6 class="card-subtitle text-muted">Check engine swap compatibility</h6>
+                                <div class="my-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Source Vehicle</label>
+                                        <select class="form-select">
+                                            <option selected>Select vehicle</option>
+                                            <option>1993-1998 Toyota Supra (2JZ-GTE)</option>
+                                            <option>2000-2005 Toyota Tundra (2UZ-FE)</option>
+                                            <option>2003-2009 Toyota 4Runner (1GR-FE)</option>
+                                            <option>2010-2015 Toyota Camry (2AR-FE)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Target Vehicle</label>
+                                        <select class="form-select">
+                                            <option selected>Select vehicle</option>
+                                            <option>1998-2005 Lexus IS300</option>
+                                            <option>1990-2002 Toyota Celica</option>
+                                            <option>1986-1992 Toyota Supra (MA70)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="btn btn-danger w-100">
+                                    <i class="bi bi-arrow-left-right me-2"></i> Check Compatibility
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card tool-card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="bi bi-clipboard-data toyota-red me-2"></i> TSB Lookup</h4>
+                                <h6 class="card-subtitle text-muted">Technical Service Bulletins</h6>
+                                <div class="my-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Toyota Model</label>
+                                        <select class="form-select">
+                                            <option selected>Select model</option>
+                                            <option>Camry</option>
+                                            <option>Corolla</option>
+                                            <option>RAV4</option>
+                                            <option>4Runner</option>
+                                            <option>Supra</option>
+                                            <option>Tacoma</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Year Range</label>
+                                        <div class="row g-2">
+                                            <div class="col">
+                                                <select class="form-select">
+                                                    <option>From</option>
+                                                    <option>2023</option>
+                                                    <option>2022</option>
+                                                    <!-- More years -->
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <select class="form-select">
+                                                    <option>To</option>
+                                                    <option>2023</option>
+                                                    <option>2022</option>
+                                                    <!-- More years -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-danger w-100">
+                                    <i class="bi bi-search me-2"></i> Search TSBs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parts Compatibility Tool -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="bi bi-puzzle toyota-red me-2"></i> Advanced Parts Compatibility Checker</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="compatibilityTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="partnum-tab" data-bs-toggle="tab" data-bs-target="#partnum" type="button" role="tab">
+                                    By Part Number
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="vehicle-tab" data-bs-toggle="tab" data-bs-target="#vehicle" type="button" role="tab">
+                                    By Vehicle
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="engine-tab" data-bs-toggle="tab" data-bs-target="#engine" type="button" role="tab">
+                                    By Engine Code
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="compatibilityTabsContent">
+                            <div class="tab-pane fade show active" id="partnum" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Toyota Part Number</label>
+                                        <input type="text" class="form-control" placeholder="e.g. 04152-0F010">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Part Type (optional)</label>
+                                        <select class="form-select">
+                                            <option selected>Auto-detect</option>
+                                            <option>Engine</option>
+                                            <option>Transmission</option>
+                                            <option>Electrical</option>
+                                            <option>Suspension</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-danger">
+                                            <i class="bi bi-search me-2"></i> Check Compatibility
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="vehicle" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Toyota Model</label>
+                                        <select class="form-select">
+                                            <option selected>Select model</option>
+                                            <option>Camry</option>
+                                            <option>Corolla</option>
+                                            <option>RAV4</option>
+                                            <option>4Runner</option>
+                                            <option>Supra</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Year</label>
+                                        <select class="form-select">
+                                            <option selected>Select year</option>
+                                            <option>2023</option>
+                                            <option>2022</option>
+                                            <!-- More years -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Trim (optional)</label>
+                                        <select class="form-select">
+                                            <option selected>All trims</option>
+                                            <option>LE</option>
+                                            <option>SE</option>
+                                            <option>XLE</option>
+                                            <option>TRD</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-danger">
+                                            <i class="bi bi-search me-2"></i> Find Compatible Parts
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="engine" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Toyota Engine Code</label>
+                                        <input type="text" class="form-control" placeholder="e.g. 2JZ-GTE, 1GR-FE">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Engine Family (optional)</label>
+                                        <select class="form-select">
+                                            <option selected>Auto-detect</option>
+                                            <option>A Series</option>
+                                            <option>GR Series</option>
+                                            <option>JZ Series</option>
+                                            <option>UZ Series</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-danger">
+                                            <i class="bi bi-search me-2"></i> Find Compatible Parts
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Results Section -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="bi bi-file-earmark-text toyota-red me-2"></i> Compatibility Results</h4>
+                        <button class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-printer me-2"></i> Print Report
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i> Part <strong>04152-0F010</strong> (Oil Filter) is compatible with the following vehicles:
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Years</th>
+                                        <th>Engines</th>
+                                        <th>Notes</th>
+                                        <th>Warehouse Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Camry</td>
+                                        <td>2012-2023</td>
+                                        <td>
+                                            <span class="badge compatibility-badge bg-primary me-1">2AR-FE</span>
+                                            <span class="badge compatibility-badge bg-primary">2GR-FE</span>
+                                        </td>
+                                        <td>All trims</td>
+                                        <td>
+                                            <span class="badge bg-success">LA: 42</span>
+                                            <span class="badge bg-success">TX: 28</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>RAV4</td>
+                                        <td>2013-2018</td>
+                                        <td>
+                                            <span class="badge compatibility-badge bg-primary">2AR-FE</span>
+                                        </td>
+                                        <td>Excludes Hybrid</td>
+                                        <td>
+                                            <span class="badge bg-success">LA: 15</span>
+                                            <span class="badge bg-warning">TX: 5</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Highlander</td>
+                                        <td>2014-2019</td>
+                                        <td>
+                                            <span class="badge compatibility-badge bg-primary">2GR-FE</span>
+                                        </td>
+                                        <td>Limited trim only</td>
+                                        <td>
+                                            <span class="badge bg-success">FL: 18</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-warning mt-3">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Not compatible with Supra (all years) or Tacoma (all years)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Resources -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="bi bi-book toyota-red me-2"></i> Toyota Technical Resources</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-file-earmark-pdf toyota-red me-2"></i> Service Manuals</h5>
+                                        <p class="card-text">Access official Toyota service manuals and repair guides.</p>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-outline-danger">
+                                                <i class="bi bi-search me-2"></i> Search Manuals
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-diagram-3 toyota-red me-2"></i> Wiring Diagrams</h5>
+                                        <p class="card-text">Complete electrical schematics for all Toyota models.</p>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-outline-danger">
+                                                <i class="bi bi-lightning-charge me-2"></i> View Diagrams
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-tools toyota-red me-2"></i> Repair Procedures</h5>
+                                        <p class="card-text">Step-by-step guides for common Toyota repairs.</p>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-outline-danger">
+                                                <i class="bi bi-wrench me-2"></i> Browse Procedures
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIN Decoder Modal -->
+    <div class="modal fade" id="vinDecoderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Toyota VIN Decoder Results</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>VIN:</strong> JT2BF22K1W0123456
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Vehicle Information</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <strong>Make:</strong> Toyota
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Model:</strong> Supra
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Year:</strong> 1998
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Trim:</strong> Turbo
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Manufacturer:</strong> Tahara Plant, Japan
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Technical Specifications</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <strong>Engine:</strong> 2JZ-GTE 3.0L Twin-Turbo I6
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Transmission:</strong> 6-Speed Manual (V160)
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Drivetrain:</strong> Rear-Wheel Drive
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Fuel Type:</strong> Premium Unleaded
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Recommended Parts</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">2JZ-GTE Engine Gasket Kit</h6>
+                                        <small class="text-muted">Part #04111-46036</small>
+                                    </div>
+                                    <small class="text-muted">Complete gasket set for 2JZ-GTE engine rebuild</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Turbocharger Rebuild Kit</h6>
+                                        <small class="text-muted">Part #04401-46020</small>
+                                    </div>
+                                    <small class="text-muted">CT12A turbocharger repair components</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger">View All Compatible Parts</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize VIN decoder functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example VIN decoder submission
+            document.querySelector('.vin-input').addEventListener('keypress', function(e) {
+                if(e.key === 'Enter') {
+                    const vin = this.value;
+                    if(vin.length === 17) {
+                        // In a real app, this would call an API
+                        const modal = new bootstrap.Modal(document.getElementById('vinDecoderModal'));
+                        modal.show();
+                    } else {
+                        alert('Please enter a complete 17-character VIN');
+                    }
+                }
+            });
+            
+            // Initialize tabs
+            const tabElms = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabElms.forEach(function(tabEl) {
+                tabEl.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const tab = new bootstrap.Tab(tabEl);
+                    tab.show();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

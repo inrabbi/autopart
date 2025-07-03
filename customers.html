@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Parts - Customer Management</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+        }
+        .toyota-red {
+            color: #e10e1f;
+        }
+        .customer-card {
+            transition: all 0.3s;
+            border-left: 4px solid #0d6efd;
+        }
+        .customer-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .customer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #dee2e6;
+        }
+        .account-badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+        .activity-badge {
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h4><i class="bi bi-gear-fill toyota-red"></i> CeeNonso Parts</h4>
+                    <hr class="bg-light">
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">
+                            <i class="bi bi-box-seam me-2"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">
+                            <i class="bi bi-cart me-2"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="warehouses.html">
+                            <i class="bi bi-building me-2"></i> Warehouses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="customers.html">
+                            <i class="bi bi-people me-2"></i> Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="bi bi-graph-up me-2"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-tools me-2 toyota-red"></i> Toyota Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-people me-2"></i> Customer Management</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                        <i class="bi bi-plus-circle"></i> Add Customer
+                    </button>
+                </div>
+
+                <!-- Customer Filters -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Search</label>
+                                    <input type="text" class="form-control" placeholder="Name, Email, Business...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Customer Type</label>
+                                    <select class="form-select">
+                                        <option selected>All Types</option>
+                                        <option>Repair Shop</option>
+                                        <option>Wholesale</option>
+                                        <option>Dealership</option>
+                                        <option>Individual</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Toyota Specialization</label>
+                                    <select class="form-select">
+                                        <option selected>All Specializations</option>
+                                        <option>General Repair</option>
+                                        <option>Engine Specialist</option>
+                                        <option>Transmission Specialist</option>
+                                        <option>Body Shop</option>
+                                        <option>Performance</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-funnel"></i> Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Customer Cards View -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card customer-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start mb-3">
+                                    <img src="https://ui-avatars.com/api/?name=Auto+Fix&background=0d6efd&color=fff" class="customer-avatar me-3">
+                                    <div>
+                                        <h5 class="card-title mb-0">AutoFix Repair</h5>
+                                        <div class="text-muted small">John Doe</div>
+                                        <span class="account-badge bg-primary">Repair Shop</span>
+                                        <span class="account-badge bg-info">Gold Tier</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div><i class="bi bi-envelope me-2"></i> john@autofix.com</div>
+                                    <div><i class="bi bi-telephone me-2"></i> (555) 123-4567</div>
+                                    <div><i class="bi bi-geo-alt me-2"></i> Los Angeles, CA</div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Specializes in:</strong>
+                                    <div>
+                                        <span class="badge bg-light text-dark me-1">Engines</span>
+                                        <span class="badge bg-light text-dark">Transmissions</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mb-2">
+                                    <div>Last Order: 2 days ago</div>
+                                    <div>$12,450 YTD</div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="#autofixDetails" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card customer-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start mb-3">
+                                    <img src="https://ui-avatars.com/api/?name=Mike+Speed&background=dc3545&color=fff" class="customer-avatar me-3">
+                                    <div>
+                                        <h5 class="card-title mb-0">Mike's Speed Shop</h5>
+                                        <div class="text-muted small">Mike Johnson</div>
+                                        <span class="account-badge bg-danger">Performance</span>
+                                        <span class="account-badge bg-warning">Silver Tier</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div><i class="bi bi-envelope me-2"></i> mike@mikespeed.com</div>
+                                    <div><i class="bi bi-telephone me-2"></i> (555) 987-6543</div>
+                                    <div><i class="bi bi-geo-alt me-2"></i> Houston, TX</div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Specializes in:</strong>
+                                    <div>
+                                        <span class="badge bg-light text-dark me-1">2JZ</span>
+                                        <span class="badge bg-light text-dark">1GR</span>
+                                        <span class="badge bg-light text-dark">Turbo</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mb-2">
+                                    <div>Last Order: 1 week ago</div>
+                                    <div>$8,720 YTD</div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="#mikeDetails" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card customer-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start mb-3">
+                                    <img src="https://ui-avatars.com/api/?name=City+Auto&background=198754&color=fff" class="customer-avatar me-3">
+                                    <div>
+                                        <h5 class="card-title mb-0">City Auto Group</h5>
+                                        <div class="text-muted small">Sarah Williams</div>
+                                        <span class="account-badge bg-success">Dealership</span>
+                                        <span class="account-badge bg-primary">Platinum Tier</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div><i class="bi bi-envelope me-2"></i> sarah@cityauto.com</div>
+                                    <div><i class="bi bi-telephone me-2"></i> (555) 456-7890</div>
+                                    <div><i class="bi bi-geo-alt me-2"></i> Miami, FL</div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Specializes in:</strong>
+                                    <div>
+                                        <span class="badge bg-light text-dark me-1">New Vehicles</span>
+                                        <span class="badge bg-light text-dark">Service Center</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mb-2">
+                                    <div>Last Order: 3 days ago</div>
+                                    <div>$24,380 YTD</div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="#cityAutoDetails" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Details Section -->
+                <div class="card mb-4" id="autofixDetails">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-building me-2"></i> AutoFix Repair - Customer Details
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2">
+                                <i class="bi bi-printer"></i> Print
+                            </button>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editCustomerModal">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <img src="https://ui-avatars.com/api/?name=Auto+Fix&background=0d6efd&color=fff&size=150" class="img-fluid rounded-circle">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h4>AutoFix Repair</h4>
+                                        <div class="mb-2">
+                                            <span class="account-badge bg-primary">Repair Shop</span>
+                                            <span class="account-badge bg-info">Gold Tier</span>
+                                            <span class="account-badge bg-success">Verified</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Primary Contact:</strong> John Doe
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Tax ID:</strong> 12-3456789
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Customer Since:</strong> Jan 15, 2018
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Contact Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <strong>Business Address:</strong>
+                                                <p>123 Main St<br>
+                                                Los Angeles, CA 90001<br>
+                                                United States</p>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <strong>Contact Details:</strong>
+                                                <p>Phone: (555) 123-4567<br>
+                                                Email: john@autofix.com<br>
+                                                Website: autofix.com</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <strong>Billing Address:</strong>
+                                                <p>Same as business address</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <strong>Business Hours:</strong>
+                                                <p>Mon-Fri: 8AM-6PM<br>
+                                                Sat: 9AM-3PM</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Toyota Specializations</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <strong>Primary Focus:</strong>
+                                            <div>
+                                                <span class="badge bg-primary me-1">Engine Repair</span>
+                                                <span class="badge bg-primary">Transmission</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Certifications:</strong>
+                                            <div>
+                                                <span class="badge bg-light text-dark me-1">Toyota Certified</span>
+                                                <span class="badge bg-light text-dark">ASE Certified</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <strong>Common Models Serviced:</strong>
+                                            <div>
+                                                <span class="badge bg-light text-dark me-1 mb-1">Camry</span>
+                                                <span class="badge bg-light text-dark me-1 mb-1">Corolla</span>
+                                                <span class="badge bg-light text-dark me-1 mb-1">RAV4</span>
+                                                <span class="badge bg-light text-dark me-1 mb-1">Tacoma</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Account Summary</h6>
+                                        <button class="btn btn-sm btn-outline-primary">View Statements</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <strong>Account Status:</strong>
+                                                <div class="text-success">Active</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <strong>Credit Limit:</strong>
+                                                <div>$15,000.00</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <strong>Balance Due:</strong>
+                                                <div>$1,245.50</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <strong>Payment Terms:</strong>
+                                                <div>Net 30</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <strong>Total YTD Spend:</strong>
+                                                <div>$12,450.00</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <strong>Avg. Order Value:</strong>
+                                                <div>$850.00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Recent Orders</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order #</th>
+                                                        <th>Date</th>
+                                                        <th>Amount</th>
+                                                        <th>Status</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>#1042</td>
+                                                        <td>2023-06-15</td>
+                                                        <td>$1,245.00</td>
+                                                        <td><span class="badge bg-warning activity-badge">Processing</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">
+                                                                <i class="bi bi-eye"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>#1038</td>
+                                                        <td>2023-06-08</td>
+                                                        <td>$780.00</td>
+                                                        <td><span class="badge bg-success activity-badge">Delivered</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">
+                                                                <i class="bi bi-eye"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>#1032</td>
+                                                        <td>2023-05-28</td>
+                                                        <td>$1,850.00</td>
+                                                        <td><span class="badge bg-success activity-badge">Delivered</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">
+                                                                <i class="bi bi-eye"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Customer Notes</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <strong>Account Manager:</strong> Michael Brown
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Last Contact:</strong> 2023-06-10 (Phone call - requested engine availability)
+                                        </div>
+                                        <div>
+                                            <strong>Special Instructions:</strong>
+                                            <p>Prefers shipments before 2PM. Contact John directly for large engine orders.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Customers Table -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">All Customers</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2">
+                                <i class="bi bi-download"></i> Export
+                            </button>
+                            <button class="btn btn-sm btn-primary">
+                                <i class="bi bi-funnel"></i> Filters
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="customersTable" class="table table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Type</th>
+                                        <th>Contact</th>
+                                        <th>Location</th>
+                                        <th>YTD Spend</th>
+                                        <th>Last Order</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Auto+Fix&background=0d6efd&color=fff&size=32" class="rounded-circle me-2" width="32" height="32">
+                                                <div>AutoFix Repair</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary">Repair Shop</span>
+                                        </td>
+                                        <td>John Doe</td>
+                                        <td>Los Angeles, CA</td>
+                                        <td>$12,450.00</td>
+                                        <td>2023-06-15</td>
+                                        <td>
+                                            <span class="badge bg-success">Active</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Mike+Speed&background=dc3545&color=fff&size=32" class="rounded-circle me-2" width="32" height="32">
+                                                <div>Mike's Speed Shop</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-danger">Performance</span>
+                                        </td>
+                                        <td>Mike Johnson</td>
+                                        <td>Houston, TX</td>
+                                        <td>$8,720.00</td>
+                                        <td>2023-06-08</td>
+                                        <td>
+                                            <span class="badge bg-success">Active</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=City+Auto&background=198754&color=fff&size=32" class="rounded-circle me-2" width="32" height="32">
+                                                <div>City Auto Group</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">Dealership</span>
+                                        </td>
+                                        <td>Sarah Williams</td>
+                                        <td>Miami, FL</td>
+                                        <td>$24,380.00</td>
+                                        <td>2023-06-12</td>
+                                        <td>
+                                            <span class="badge bg-success">Active</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Tony+Custom&background=6f42c1&color=fff&size=32" class="rounded-circle me-2" width="32" height="32">
+                                                <div>Tony's Customs</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">Restoration</span>
+                                        </td>
+                                        <td>Tony Rodriguez</td>
+                                        <td>Phoenix, AZ</td>
+                                        <td>$5,670.00</td>
+                                        <td>2023-06-05</td>
+                                        <td>
+                                            <span class="badge bg-success">Active</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Ralph+Perf&background=fd7e14&color=fff&size=32" class="rounded-circle me-2" width="32" height="32">
+                                                <div>Ralph's Performance</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning">Tuning Shop</span>
+                                        </td>
+                                        <td>Ralph Peterson</td>
+                                        <td>Dallas, TX</td>
+                                        <td>$3,420.00</td>
+                                        <td>2023-05-28</td>
+                                        <td>
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal fade" id="addCustomerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Add New Customer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <ul class="nav nav-tabs mb-4" id="customerTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="business-tab" data-bs-toggle="tab" data-bs-target="#business" type="button" role="tab">
+                                    Business Customer
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="individual-tab" data-bs-toggle="tab" data-bs-target="#individual" type="button" role="tab">
+                                    Individual
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="customerTabsContent">
+                            <!-- Business Customer Tab -->
+                            <div class="tab-pane fade show active" id="business" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Business Name*</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Customer Type*</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select type</option>
+                                            <option>Repair Shop</option>
+                                            <option>Dealership</option>
+                                            <option>Wholesaler</option>
+                                            <option>Performance Shop</option>
+                                            <option>Restoration Shop</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Primary Contact*</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Contact Title</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Tax ID/EIN*</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Toyota Specialization</label>
+                                        <select class="form-select" multiple>
+                                            <option>General Repair</option>
+                                            <option>Engine Specialist</option>
+                                            <option>Transmission Specialist</option>
+                                            <option>Electrical</option>
+                                            <option>Body Work</option>
+                                            <option>Performance</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Business Address*</label>
+                                        <input type="text" class="form-control mb-2" placeholder="Street Address" required>
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="City" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select class="form-select" required>
+                                                    <option value="">State</option>
+                                                    <option>California</option>
+                                                    <option>Texas</option>
+                                                    <option>Florida</option>
+                                                    <!-- Add more states as needed -->
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="ZIP Code" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Phone*</label>
+                                        <input type="tel" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email*</label>
+                                        <input type="email" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Website</label>
+                                        <input type="url" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Business Hours</label>
+                                        <input type="text" class="form-control" placeholder="e.g. Mon-Fri 8AM-5PM">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Individual Customer Tab -->
+                            <div class="tab-pane fade" id="individual" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">First Name*</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Last Name*</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Address*</label>
+                                        <input type="text" class="form-control mb-2" placeholder="Street Address" required>
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" placeholder="City" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select class="form-select" required>
+                                                    <option value="">State</option>
+                                                    <option>California</option>
+                                                    <option>Texas</option>
+                                                    <option>Florida</option>
+                                                    <!-- Add more states as needed -->
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" placeholder="ZIP Code" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Phone*</label>
+                                        <input type="tel" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email*</label>
+                                        <input type="email" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label">Toyota Vehicles Owned</label>
+                                        <select class="form-select" multiple>
+                                            <option>Camry</option>
+                                            <option>Corolla</option>
+                                            <option>RAV4</option>
+                                            <option>4Runner</option>
+                                            <option>Tacoma</option>
+                                            <option>Supra</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Account Tier</label>
+                                <select class="form-select">
+                                    <option>Standard</option>
+                                    <option>Silver</option>
+                                    <option>Gold</option>
+                                    <option>Platinum</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Account Manager</label>
+                                <select class="form-select">
+                                    <option>Michael Brown</option>
+                                    <option>Sarah Johnson</option>
+                                    <option>David Lee</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Credit Limit</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" value="5000">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Terms</label>
+                                <select class="form-select">
+                                    <option>Net 15</option>
+                                    <option selected>Net 30</option>
+                                    <option>Net 60</option>
+                                    <option>Due on Receipt</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" rows="3" placeholder="Special instructions, preferences..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Customer Modal -->
+    <div class="modal fade" id="editCustomerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Edit Customer - AutoFix Repair</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Similar content to Add Customer Modal, but pre-filled with existing data -->
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Business Name*</label>
+                                <input type="text" class="form-control" value="AutoFix Repair" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Customer Type*</label>
+                                <select class="form-select" required>
+                                    <option>Repair Shop</option>
+                                    <option>Dealership</option>
+                                    <option>Wholesaler</option>
+                                </select>
+                            </div>
+                            <!-- Include all other fields pre-filled with existing customer data -->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            $('#customersTable').DataTable({
+                responsive: true,
+                order: [[5, 'desc']] // Sort by last order date by default
+            });
+            
+            // Initialize tabs in add customer modal
+            const customerTabs = new bootstrap.Tab(document.getElementById('business-tab'));
+        });
+    </script>
+</body>
+</html>

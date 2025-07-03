@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Parts - Warehouse Management</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <!-- Leaflet CSS (for warehouse maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+        }
+        .toyota-red {
+            color: #e10e1f;
+        }
+        .warehouse-card {
+            transition: all 0.3s;
+            border-left: 4px solid #0d6efd;
+        }
+        .warehouse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .warehouse-map {
+            height: 200px;
+            width: 100%;
+            border-radius: 4px;
+        }
+        .inventory-progress {
+            height: 10px;
+        }
+        .bin-location {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+        #warehouseMap {
+            height: 400px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h4><i class="bi bi-gear-fill toyota-red"></i> CeeNonso Parts</h4>
+                    <hr class="bg-light">
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">
+                            <i class="bi bi-box-seam me-2"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">
+                            <i class="bi bi-cart me-2"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="warehouses.html">
+                            <i class="bi bi-building me-2"></i> Warehouses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="customers.html">
+                            <i class="bi bi-people me-2"></i> Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">
+                            <i class="bi bi-graph-up me-2"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-tools me-2 toyota-red"></i> Toyota Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-building me-2"></i> Warehouse Management</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWarehouseModal">
+                        <i class="bi bi-plus-circle"></i> Add Warehouse
+                    </button>
+                </div>
+
+                <!-- Warehouse Overview Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card warehouse-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">Los Angeles (Main)</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Primary Distribution Center</h6>
+                                    </div>
+                                    <span class="badge bg-primary">Primary</span>
+                                </div>
+                                <div id="laMap" class="warehouse-map mb-3"></div>
+                                <div class="mb-2">
+                                    <strong>Capacity:</strong> 
+                                    <div class="progress inventory-progress">
+                                        <div class="progress-bar bg-success" style="width: 65%"></div>
+                                    </div>
+                                    <small class="text-muted">1,024 of 1,600 locations filled</small>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Specializes in:</strong>
+                                    <span class="badge bg-light text-dark">Engines</span>
+                                    <span class="badge bg-light text-dark">Performance Parts</span>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="#laWarehouse" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card warehouse-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">Texas Warehouse</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Central Distribution</h6>
+                                    </div>
+                                    <span class="badge bg-secondary">Standard</span>
+                                </div>
+                                <div id="txMap" class="warehouse-map mb-3"></div>
+                                <div class="mb-2">
+                                    <strong>Capacity:</strong> 
+                                    <div class="progress inventory-progress">
+                                        <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                    </div>
+                                    <small class="text-muted">724 of 1,600 locations filled</small>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Specializes in:</strong>
+                                    <span class="badge bg-light text-dark">Truck Parts</span>
+                                    <span class="badge bg-light text-dark">Suspension</span>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="#txWarehouse" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card warehouse-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">Florida Warehouse</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">East Coast Hub</h6>
+                                    </div>
+                                    <span class="badge bg-danger">Full</span>
+                                </div>
+                                <div id="flMap" class="warehouse-map mb-3"></div>
+                                <div class="mb-2">
+                                    <strong>Capacity:</strong> 
+                                    <div class="progress inventory-progress">
+                                        <div class="progress-bar bg-danger" style="width: 85%"></div>
+                                    </div>
+                                    <small class="text-muted">1,512 of 1,800 locations filled</small>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Specializes in:</strong>
+                                    <span class="badge bg-light text-dark">Electrical</span>
+                                    <span class="badge bg-light text-dark">HVAC</span>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a href="#flWarehouse" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warehouse Details Section -->
+                <div class="card mb-4" id="laWarehouse">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-building me-2"></i> Los Angeles Warehouse Details
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2">
+                                <i class="bi bi-printer"></i> Print Layout
+                            </button>
+                            <button class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div id="warehouseMap" class="mb-4"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Warehouse Information</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-2">
+                                                    <strong>Address:</strong>
+                                                    <p>1234 Toyota Way, Los Angeles, CA 90001</p>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Contact:</strong>
+                                                    <p>Manager: John Smith<br>
+                                                    Phone: (555) 123-4567<br>
+                                                    Email: la@toyotaparts.com</p>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Hours:</strong>
+                                                    <p>Mon-Fri: 8AM - 5PM<br>
+                                                    Sat: 9AM - 2PM<br>
+                                                    Sun: Closed</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Storage Statistics</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <strong>Capacity Utilization:</strong>
+                                                    <div class="progress mb-2" style="height: 10px;">
+                                                        <div class="progress-bar bg-success" style="width: 65%"></div>
+                                                    </div>
+                                                    <small>1,024 of 1,600 bin locations used</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <strong>Parts Distribution:</strong>
+                                                    <div class="mb-2">
+                                                        <small>Engines: 42%</small>
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar" style="width: 42%"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <small>Transmissions: 18%</small>
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar bg-info" style="width: 18%"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <small>Electrical: 15%</small>
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar bg-warning" style="width: 15%"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <small>Other: 25%</small>
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar bg-secondary" style="width: 25%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Quick Actions</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-outline-primary text-start">
+                                                <i class="bi bi-box-arrow-in-down"></i> Receive Shipment
+                                            </button>
+                                            <button class="btn btn-outline-primary text-start">
+                                                <i class="bi bi-arrow-left-right"></i> Transfer Stock
+                                            </button>
+                                            <button class="btn btn-outline-primary text-start">
+                                                <i class="bi bi-clipboard-check"></i> Perform Inventory Count
+                                            </button>
+                                            <button class="btn btn-outline-primary text-start">
+                                                <i class="bi bi-upc-scan"></i> Print Barcode Labels
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Recent Activity</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item">
+                                                <small class="text-muted">Today, 10:45 AM</small>
+                                                <p class="mb-1">Received shipment of 2JZ-GTE engines (Qty: 3)</p>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <small class="text-muted">Yesterday, 3:30 PM</small>
+                                                <p class="mb-1">Processed order #1042 (2JZ-GTE engine)</p>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <small class="text-muted">Yesterday, 11:20 AM</small>
+                                                <p class="mb-1">Transferred 5 Tacoma suspension kits to Texas</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Staff Contacts</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <strong>John Smith</strong>
+                                            <div>Warehouse Manager</div>
+                                            <small class="text-muted">(555) 123-4567</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Maria Garcia</strong>
+                                            <div>Inventory Specialist</div>
+                                            <small class="text-muted">(555) 123-4568</small>
+                                        </div>
+                                        <div>
+                                            <strong>David Kim</strong>
+                                            <div>Shipping Supervisor</div>
+                                            <small class="text-muted">(555) 123-4569</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warehouse Inventory Section -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-box-seam me-2"></i> Los Angeles Warehouse Inventory
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2">
+                                <i class="bi bi-download"></i> Export
+                            </button>
+                            <button class="btn btn-sm btn-primary">
+                                <i class="bi bi-funnel"></i> Filters
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="warehouseInventoryTable" class="table table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Part #</th>
+                                        <th>Description</th>
+                                        <th>Model</th>
+                                        <th>Bin Location</th>
+                                        <th>Qty</th>
+                                        <th>Status</th>
+                                        <th>Last Count</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2JZ-GTE</td>
+                                        <td>Engine Assembly</td>
+                                        <td>Supra</td>
+                                        <td><span class="bin-location">ENG-12A</span></td>
+                                        <td>2</td>
+                                        <td>
+                                            <span class="badge bg-success">In Stock</span>
+                                        </td>
+                                        <td>2023-06-10</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>04152-0F010</td>
+                                        <td>Oil Filter</td>
+                                        <td>Camry</td>
+                                        <td><span class="bin-location">FLT-45B</span></td>
+                                        <td>5</td>
+                                        <td>
+                                            <span class="badge bg-warning">Low Stock</span>
+                                        </td>
+                                        <td>2023-06-15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1GR-FE</td>
+                                        <td>Engine Long Block</td>
+                                        <td>4Runner</td>
+                                        <td><span class="bin-location">ENG-08C</span></td>
+                                        <td>4</td>
+                                        <td>
+                                            <span class="badge bg-success">In Stock</span>
+                                        </td>
+                                        <td>2023-06-12</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>90919-01200</td>
+                                        <td>Spark Plug</td>
+                                        <td>Corolla</td>
+                                        <td><span class="bin-location">ELC-22D</span></td>
+                                        <td>42</td>
+                                        <td>
+                                            <span class="badge bg-success">In Stock</span>
+                                        </td>
+                                        <td>2023-06-14</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>04465-0W010</td>
+                                        <td>Fuel Pump</td>
+                                        <td>Camry</td>
+                                        <td><span class="bin-location">FLS-18E</span></td>
+                                        <td>0</td>
+                                        <td>
+                                            <span class="badge bg-danger">Out of Stock</span>
+                                        </td>
+                                        <td>2023-06-08</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Warehouse Modal -->
+    <div class="modal fade" id="addWarehouseModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Add New Warehouse</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Warehouse Name*</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Warehouse Code*</label>
+                                <input type="text" class="form-control" placeholder="e.g. LAX, TX, FL" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Address*</label>
+                                <input type="text" class="form-control mb-2" placeholder="Street Address" required>
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" placeholder="City" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" required>
+                                            <option value="">State</option>
+                                            <option>California</option>
+                                            <option>Texas</option>
+                                            <option>Florida</option>
+                                            <!-- Add more states as needed -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" placeholder="ZIP Code" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Primary Contact*</label>
+                                <input type="text" class="form-control" placeholder="Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contact Phone*</label>
+                                <input type="tel" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email*</label>
+                                <input type="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Warehouse Type*</label>
+                                <select class="form-select" required>
+                                    <option>Primary Distribution Center</option>
+                                    <option>Regional Warehouse</option>
+                                    <option>Specialty Warehouse</option>
+                                    <option>Cross-Dock Facility</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Total Storage Bins*</label>
+                                <input type="number" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Specializations</label>
+                                <select class="form-select" multiple>
+                                    <option>Engines</option>
+                                    <option>Transmissions</option>
+                                    <option>Electrical</option>
+                                    <option>Suspension</option>
+                                    <option>Body Parts</option>
+                                    <option>Performance Parts</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Additional Notes</label>
+                                <textarea class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add Warehouse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            $('#warehouseInventoryTable').DataTable({
+                responsive: true,
+                order: [[3, 'asc']] // Sort by bin location by default
+            });
+            
+            // Initialize warehouse maps
+            const laMap = L.map('laMap').setView([34.0522, -118.2437], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(laMap);
+            L.marker([34.0522, -118.2437]).addTo(laMap)
+                .bindPopup('Toyota Parts LA Warehouse');
+            
+            const txMap = L.map('txMap').setView([32.7767, -96.7970], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(txMap);
+            L.marker([32.7767, -96.7970]).addTo(txMap)
+                .bindPopup('Toyota Parts TX Warehouse');
+            
+            const flMap = L.map('flMap').setView([25.7617, -80.1918], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(flMap);
+            L.marker([25.7617, -80.1918]).addTo(flMap)
+                .bindPopup('Toyota Parts FL Warehouse');
+            
+            // Main warehouse map
+            const warehouseMap = L.map('warehouseMap').setView([34.0522, -118.2437], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(warehouseMap);
+            
+            // Add warehouse polygon
+            const warehousePolygon = L.polygon([
+                [34.052, -118.245],
+                [34.052, -118.242],
+                [34.050, -118.242],
+                [34.050, -118.245]
+            ], {color: 'red'}).addTo(warehouseMap);
+            
+            warehousePolygon.bindPopup("Toyota Parts LA Warehouse Facility");
+        });
+    </script>
+</body>
+</html>

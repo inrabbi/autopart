@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Parts - Reports & Analytics</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #0d6efd;
+        }
+        .toyota-red {
+            color: #e10e1f;
+        }
+        .report-card {
+            transition: all 0.3s;
+            border-left: 4px solid #0d6efd;
+        }
+        .report-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .progress-thin {
+            height: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h4><i class="bi bi-gear-fill toyota-red"></i> CeeNonso Parts</h4>
+                    <hr class="bg-light">
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">
+                            <i class="bi bi-box-seam me-2"></i> Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">
+                            <i class="bi bi-cart me-2"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="warehouses.html">
+                            <i class="bi bi-building me-2"></i> Warehouses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="customers.html">
+                            <i class="bi bi-people me-2"></i> Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="reports.html">
+                            <i class="bi bi-graph-up me-2"></i> Reports
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-tools me-2 toyota-red"></i> Toyota Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-graph-up me-2"></i> Reports & Analytics</h2>
+                    <div>
+                        <button class="btn btn-primary me-2">
+                            <i class="bi bi-calendar-range"></i> Date Range
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="bi bi-download"></i> Export All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Report Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="card-subtitle mb-2 text-muted">Monthly Sales</h6>
+                                        <h3 class="card-title">$42,380</h3>
+                                    </div>
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-currency-dollar text-primary" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>vs Last Month</div>
+                                        <div class="text-success">+12% <i class="bi bi-arrow-up"></i></div>
+                                    </div>
+                                    <div class="progress progress-thin">
+                                        <div class="progress-bar bg-success" style="width: 12%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="card-subtitle mb-2 text-muted">Orders Processed</h6>
+                                        <h3 class="card-title">84</h3>
+                                    </div>
+                                    <div class="bg-success bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-cart-check text-success" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>vs Last Month</div>
+                                        <div class="text-success">+8% <i class="bi bi-arrow-up"></i></div>
+                                    </div>
+                                    <div class="progress progress-thin">
+                                        <div class="progress-bar bg-success" style="width: 8%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="card-subtitle mb-2 text-muted">Top Selling Part</h6>
+                                        <h5 class="card-title">04152-0F010</h5>
+                                        <small class="text-muted">Oil Filter</small>
+                                    </div>
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-trophy text-warning" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>Units Sold</div>
+                                        <div>142</div>
+                                    </div>
+                                    <div class="progress progress-thin">
+                                        <div class="progress-bar bg-warning" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="card-subtitle mb-2 text-muted">Inventory Value</h6>
+                                        <h3 class="card-title">$287,450</h3>
+                                    </div>
+                                    <div class="bg-info bg-opacity-10 p-3 rounded">
+                                        <i class="bi bi-box-seam text-info" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>Turnover Rate</div>
+                                        <div class="text-success">4.2 <i class="bi bi-arrow-up"></i></div>
+                                    </div>
+                                    <div class="progress progress-thin">
+                                        <div class="progress-bar bg-info" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Report Section -->
+                <div class="row">
+                    <!-- Left Column - Charts -->
+                    <div class="col-md-8">
+                        <!-- Sales Trend Chart -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Sales Trend - Last 12 Months</h5>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary active">Monthly</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Quarterly</button>
+                                    <button class="btn btn-sm btn-outline-secondary">YTD</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Toyota Parts Table -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Top Selling Toyota Parts</h5>
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-download"></i> Export
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Part #</th>
+                                                <th>Description</th>
+                                                <th>Model</th>
+                                                <th>Qty Sold</th>
+                                                <th>Revenue</th>
+                                                <th>Margin</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>04152-0F010</td>
+                                                <td>Oil Filter</td>
+                                                <td>Camry, RAV4</td>
+                                                <td>142</td>
+                                                <td>$2,698.00</td>
+                                                <td class="text-success">42%</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-graph-up"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>90919-01200</td>
+                                                <td>Spark Plug</td>
+                                                <td>Corolla, Camry</td>
+                                                <td>128</td>
+                                                <td>$1,086.72</td>
+                                                <td class="text-success">38%</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-graph-up"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>2JZ-GTE</td>
+                                                <td>Engine Assembly</td>
+                                                <td>Supra</td>
+                                                <td>9</td>
+                                                <td>$34,650.00</td>
+                                                <td class="text-success">28%</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-graph-up"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>1GR-FE</td>
+                                                <td>Engine Long Block</td>
+                                                <td>4Runner, Tacoma</td>
+                                                <td>7</td>
+                                                <td>$19,250.00</td>
+                                                <td class="text-success">25%</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-graph-up"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>5</td>
+                                                <td>04465-0W010</td>
+                                                <td>Fuel Pump</td>
+                                                <td>Camry, Avalon</td>
+                                                <td>45</td>
+                                                <td>$6,569.55</td>
+                                                <td class="text-success">35%</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-graph-up"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Additional Reports -->
+                    <div class="col-md-4">
+                        <!-- Inventory Health -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Inventory Health</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="inventoryHealthChart"></canvas>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>Fast Moving</div>
+                                        <div>68 parts</div>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 8px;">
+                                        <div class="progress-bar bg-success" style="width: 45%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>Slow Moving</div>
+                                        <div>42 parts</div>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" style="width: 28%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <div>Non-Moving</div>
+                                        <div>15 parts</div>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" style="width: 10%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Customers -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Top Customers by Spend</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group">
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">City Auto Group</h6>
+                                            <strong>$24,380</strong>
+                                        </div>
+                                        <small class="text-muted">Toyota Dealership</small>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">AutoFix Repair</h6>
+                                            <strong>$12,450</strong>
+                                        </div>
+                                        <small class="text-muted">Certified Repair Shop</small>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">Mike's Speed Shop</h6>
+                                            <strong>$8,720</strong>
+                                        </div>
+                                        <small class="text-muted">Performance Specialist</small>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">Tony's Customs</h6>
+                                            <strong>$5,670</strong>
+                                        </div>
+                                        <small class="text-muted">Restoration Shop</small>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">Ralph's Performance</h6>
+                                            <strong>$3,420</strong>
+                                        </div>
+                                        <small class="text-muted">Tuning Shop</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Model Popularity -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Parts by Toyota Model</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="modelChart"></canvas>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="badge bg-primary me-2">&nbsp;</span>
+                                                <small>Camry</small>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="badge bg-success me-2">&nbsp;</span>
+                                                <small>Corolla</small>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-info me-2">&nbsp;</span>
+                                                <small>RAV4</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="badge bg-warning me-2">&nbsp;</span>
+                                                <small>Tacoma</small>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="badge bg-danger me-2">&nbsp;</span>
+                                                <small>Supra</small>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-secondary me-2">&nbsp;</span>
+                                                <small>Other</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Reports Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Detailed Reports</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                            <i class="bi bi-box-seam text-primary" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h5>Inventory Report</h5>
+                                        <p class="text-muted">Detailed stock levels across all warehouses</p>
+                                        <button class="btn btn-outline-primary">Generate Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <div class="bg-success bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                            <i class="bi bi-cash-coin text-success" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h5>Sales Analysis</h5>
+                                        <p class="text-muted">Revenue, margins, and product performance</p>
+                                        <button class="btn btn-outline-primary">Generate Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <div class="bg-warning bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                            <i class="bi bi-people text-warning" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h5>Customer Insights</h5>
+                                        <p class="text-muted">Buying patterns and customer segmentation</p>
+                                        <button class="btn btn-outline-primary">Generate Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <div class="bg-info bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                            <i class="bi bi-gear text-info" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h5>Engine Parts Report</h5>
+                                        <p class="text-muted">Performance of engine-related components</p>
+                                        <button class="btn btn-outline-primary">Generate Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <div class="bg-danger bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                            <i class="bi bi-truck text-danger" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h5>Shipping Analysis</h5>
+                                        <p class="text-muted">Freight costs and delivery performance</p>
+                                        <button class="btn btn-outline-primary">Generate Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <div class="bg-secondary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                            <i class="bi bi-clipboard-data text-secondary" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h5>Custom Report</h5>
+                                        <p class="text-muted">Build your own report with custom parameters</p>
+                                        <button class="btn btn-outline-primary">Create Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable for top parts table
+            $('.table').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                ordering: false
+            });
+            
+            // Sales Trend Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Parts Sales',
+                        data: [28500, 31200, 29800, 33400, 38700, 42380, 40100, 38900, 36200, 35400, 38200, 41000],
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }, {
+                        label: 'Engine Sales',
+                        data: [12500, 14200, 11800, 15400, 18700, 16380, 15100, 16900, 14200, 15400, 18200, 21000],
+                        borderColor: '#e10e1f',
+                        backgroundColor: 'rgba(225, 14, 31, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Inventory Health Chart
+            const inventoryCtx = document.getElementById('inventoryHealthChart').getContext('2d');
+            const inventoryChart = new Chart(inventoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fast Moving', 'Slow Moving', 'Non-Moving'],
+                    datasets: [{
+                        data: [68, 42, 15],
+                        backgroundColor: [
+                            '#198754',
+                            '#ffc107',
+                            '#dc3545'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Model Popularity Chart
+            const modelCtx = document.getElementById('modelChart').getContext('2d');
+            const modelChart = new Chart(modelCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [
+                        {
+                            label: 'Camry',
+                            data: [65, 59, 80, 81],
+                            backgroundColor: '#0d6efd'
+                        },
+                        {
+                            label: 'Corolla',
+                            data: [52, 48, 60, 55],
+                            backgroundColor: '#198754'
+                        },
+                        {
+                            label: 'RAV4',
+                            data: [45, 52, 58, 62],
+                            backgroundColor: '#0dcaf0'
+                        },
+                        {
+                            label: 'Tacoma',
+                            data: [38, 42, 45, 40],
+                            backgroundColor: '#ffc107'
+                        },
+                        {
+                            label: 'Supra',
+                            data: [15, 18, 22, 25],
+                            backgroundColor: '#dc3545'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
